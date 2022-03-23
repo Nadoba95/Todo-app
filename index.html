@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="./images/favicon-32x32.png"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <title>Todo app</title>
+  </head>
+  <body>
+    <div class="background-img"></div>
+    <main class="container">
+      <div class="header">
+        <h1>TODO</h1>
+        <div class="header__icon"></div>
+      </div>
+      <div class="type-todo">
+        <div class="circle"></div>
+        <input type="text" id="todo-input" placeholder="Create a new todo..." />
+      </div>
+      <div class="todo-list">
+        <!-- <div class="list-item">
+          <div class="checkmark">
+            <div class="icon-check"></div>
+          </div>
+          <input type="checkbox" />
+          <p>123</p>
+          <div class="icon-x"></div>
+        </div> -->
+      </div>
+      <div class="footer">
+        <div class="counter">0 items left</div>
+        <div class="filters">
+          <li onclick="showAll()">All</li>
+          <li onclick="filterActive()">Active</li>
+          <li onclick="filterCompleted()">Completed</li>
+        </div>
+        <div class="clear" onclick="clearCompleted()">Clear Completed</div>
+      </div>
+    </main>
+    <script src="main.js"></script>
+  </body>
+</html>
