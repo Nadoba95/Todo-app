@@ -2,97 +2,86 @@
 const bgImage = document.querySelector(".background-img");
 const headerIcon = document.querySelector(".header__icon");
 const typeTodo = document.querySelector(".type-todo");
-const list = document.querySelector(".todo-list");
 const footer = document.querySelector(".footer");
-
+const filtersMob = document.querySelector(".filters-mobile");
+const list = document.querySelector(".todo-list");
 const btn = document.querySelector(".header__icon");
 const input = document.querySelector("#todo-input");
-
 const counter = document.querySelector(".counter");
 
-let todos = [];
-let todoNames = [];
+let todos = JSON.parse(localStorage.getItem("todos")) || [];
 
-function newTodoItem(todo) {
-  const listItem = document.createElement("div");
-  const checkmark = document.createElement("div");
-  const iconCheck = document.createElement("div");
-  const checkbox = document.createElement("input");
-  const text = document.createElement("p");
-  const x = document.createElement("div");
-
-  let obj = todos.find((t) => t.value === todo);
-
-  text.textContent = todo;
-  listItem.classList.add("list-item");
-  checkmark.classList.add("checkmark");
-  iconCheck.classList.add("icon-check");
-  checkbox.setAttribute("type", "checkbox");
-  x.classList.add("icon-x");
-
-  list.appendChild(listItem);
-  listItem.appendChild(checkmark);
-  checkmark.appendChild(iconCheck);
-  listItem.appendChild(checkbox);
-  listItem.appendChild(text);
-  listItem.appendChild(x);
-
-  function checkItem() {
-    if (checkbox.checked) {
-      checkbox.checked = false;
-      obj.checked = false;
-      text.style.textDecoration = "none";
-      text.style.opacity = "1";
-      checkmark.classList.remove("checkmark-active");
-      iconCheck.classList.remove("icon-check-active");
-      countItems();
-    } else {
-      checkbox.checked = true;
-      obj.checked = true;
-      text.style.textDecoration = "line-through";
-      text.style.opacity = "0.6";
-      checkmark.classList.add("checkmark-active");
-      iconCheck.classList.add("icon-check-active");
-      countItems();
-    }
-  }
-
-  function removeItem() {
-    this.parentElement.remove();
-    todos = todos.filter((t) => t !== obj);
-    countItems();
-  }
-
-  function hover() {
-    checkmark.style.border = "solid 1px";
-    checkmark.style.borderLeftColor = "hsl(192, 100%, 67%)";
-    checkmark.style.borderTopColor = "hsl(192, 100%, 67%)";
-    checkmark.style.borderBottomColor = "hsl(280, 87%, 65%)";
-    checkmark.style.borderRightColor = "hsl(280, 87%, 65%)";
-  }
-
-  function unhover() {
-    checkmark.style.border = "hsl(234, 11%, 52%) solid 1px";
-  }
-
-  checkmark.addEventListener("click", checkItem);
-  text.addEventListener("click", checkItem);
-  x.addEventListener("click", removeItem);
-  [text, checkmark].forEach((item) =>
-    item.addEventListener("mouseover", hover)
-  );
-  [text, checkmark].forEach((item) =>
-    item.addEventListener("mouseout", unhover)
-  );
+function renderItems(items = []) {
+  list.innerHTML = items
+    .map((item, i) => {
+      return `<div class="list-item drag-item ${
+        item.checked ? "active" : ""
+      }" draggable="true">
+                <label>${item.text}</label>
+                <div class="checkmark">
+                  <span class="icon-check"></span>
+                </div>
+                <input type="checkbox" data-index=${i} ${
+        item.checked ? "checked" : ""
+      } />
+                <span class="icon-x"></span>
+              </div>`;
+    })
+    .join("");
 }
 
-function changeTheme() {
-  document.body.classList.toggle("body-active");
-  bgImage.classList.toggle("background-img-active");
-  headerIcon.classList.toggle("header__icon-active");
-  typeTodo.classList.toggle("type-todo-active");
-  list.classList.toggle("type-todo-active");
-  footer.classList.toggle("footer-active");
+function addItem(e) {
+  if (e.kay === "Enter" || e.keyCode === 13) {
+    const item = {
+      text: e.target.value,
+      checked: false,
+    };
+
+    if (e.target.value !== "") {
+      todos.push(item);
+      renderItems(todos);
+      localStorage.setItem("todos", JSON.stringify(todos));
+      countItems();
+      e.target.value = "";
+    }
+  }
+}
+
+function checkItem(e) {
+  if (
+    e.target.matches("label") ||
+    e.target.matches(".checkmark") ||
+    e.target.matches(".icon-check")
+  ) {
+    const checkbox = e.target.closest(".list-item").querySelector("input");
+    const listItem = e.target.closest(".list-item");
+
+    if (checkbox.checked) {
+      todos[checkbox.dataset.index].checked = false;
+      listItem.classList.remove("active");
+      renderItems(todos);
+      localStorage.setItem("todos", JSON.stringify(todos));
+      countItems();
+      showAll();
+    } else {
+      todos[checkbox.dataset.index].checked = true;
+      listItem.classList.add("active");
+      renderItems(todos);
+      localStorage.setItem("todos", JSON.stringify(todos));
+      countItems();
+      showAll();
+    }
+  } else if (e.target.matches(".icon-x")) {
+    const { index } = e.target
+      .closest(".list-item")
+      .querySelector("input").dataset;
+
+    e.target.parentElement.remove();
+    todos.splice(index, 1);
+    renderItems(todos);
+    localStorage.setItem("todos", JSON.stringify(todos));
+    countItems();
+  }
 }
 
 function countItems() {
@@ -103,9 +92,17 @@ function countItems() {
 function showAll() {
   document.querySelectorAll(".filters li").forEach((item, i) => {
     if (i === 0) {
-      item.classList.add("filter-active");
+      item.classList.add("active");
     } else {
-      item.classList.remove("filter-active");
+      item.classList.remove("active");
+    }
+  });
+
+  document.querySelectorAll(".filters-mobile li").forEach((item, i) => {
+    if (i === 0) {
+      item.classList.add("active");
+    } else {
+      item.classList.remove("active");
     }
   });
 
@@ -113,14 +110,21 @@ function showAll() {
     item.style.display = "grid";
   });
 }
-showAll();
 
 function filterActive() {
   document.querySelectorAll(".filters li").forEach((item, i) => {
     if (i === 1) {
-      item.classList.add("filter-active");
+      item.classList.add("active");
     } else {
-      item.classList.remove("filter-active");
+      item.classList.remove("active");
+    }
+  });
+
+  document.querySelectorAll(".filters-mobile li").forEach((item, i) => {
+    if (i === 1) {
+      item.classList.add("active");
+    } else {
+      item.classList.remove("active");
     }
   });
 
@@ -135,9 +139,17 @@ function filterActive() {
 function filterCompleted() {
   document.querySelectorAll(".filters li").forEach((item, i) => {
     if (i === 2) {
-      item.classList.add("filter-active");
+      item.classList.add("active");
     } else {
-      item.classList.remove("filter-active");
+      item.classList.remove("active");
+    }
+  });
+
+  document.querySelectorAll(".filters-mobile li").forEach((item, i) => {
+    if (i === 2) {
+      item.classList.add("active");
+    } else {
+      item.classList.remove("active");
     }
   });
 
@@ -152,25 +164,74 @@ function filterCompleted() {
 function clearCompleted() {
   document.querySelectorAll(".list-item").forEach((item) => {
     if (item.querySelector("input").checked) {
+      const { index } = item.querySelector("input").dataset;
+      todos.splice(index, 1, "");
       item.remove();
     }
   });
+
+  todos = todos.filter((t) => t !== "");
+  renderItems(todos);
+  localStorage.setItem("todos", JSON.stringify(todos));
+  showAll();
 }
 
-input.addEventListener("keyup", (e) => {
-  if (e.kay === "Enter" || e.keyCode === 13) {
-    if (todoNames.includes(e.target.value)) {
-      e.target.value = "";
-      return;
-    }
-    if (e.target.value !== "") {
-      todos.push({ value: e.target.value, checked: false });
-      todoNames.push(e.target.value);
-      newTodoItem(e.target.value);
-      e.target.value = "";
-      countItems();
-    }
-  }
-});
+function dragStart(e) {
+  e.target.classList.add("draggable-element");
+}
 
+function dragEnd(e) {
+  e.target.classList.remove("draggable-element");
+
+  document.querySelectorAll(".list-item").forEach((item, i) => {
+    const text = item.querySelector("label").textContent;
+    const bool = item.querySelector("input").checked ? true : false;
+
+    todos[i].text = text;
+    todos[i].checked = bool;
+  });
+
+  renderItems(todos);
+  localStorage.setItem("todos", JSON.stringify(todos));
+}
+
+function dragOver(e) {
+  e.preventDefault();
+
+  const dragElement = document.querySelector(".draggable-element");
+  const currentElement = e.target;
+
+  const canSort =
+    dragElement !== currentElement &&
+    currentElement.classList.contains("drag-item");
+
+  if (!canSort) return;
+
+  const nextElement =
+    currentElement === dragElement.nextElementSibling
+      ? currentElement.nextElementSibling
+      : currentElement;
+
+  list.insertBefore(dragElement, nextElement);
+}
+
+function changeTheme() {
+  document.body.classList.toggle("active");
+  bgImage.classList.toggle("active");
+  headerIcon.classList.toggle("active");
+  typeTodo.classList.toggle("active");
+  list.classList.toggle("active");
+  footer.classList.toggle("active");
+  filtersMob.classList.toggle("active");
+}
+
+showAll();
+renderItems(todos);
+countItems();
+
+input.addEventListener("keyup", addItem);
+list.addEventListener("click", checkItem);
+list.addEventListener("dragstart", dragStart);
+list.addEventListener("dragend", dragEnd);
+list.addEventListener("dragover", dragOver);
 btn.addEventListener("click", changeTheme);

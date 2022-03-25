@@ -8,10 +8,7 @@ body {
   background-color: hsl(235, 21%, 11%);
   font-size: 18px;
   font-family: "Josefin Sans", sans-serif;
-}
-
-.body-active {
-  background-color: hsl(236, 33%, 92%);
+  transition: 0.3s;
 }
 
 .background-img {
@@ -19,17 +16,14 @@ body {
   background-size: cover;
   width: 100%;
   height: 240px;
-}
-
-.background-img-active {
-  background-image: url(./images/bg-desktop-light.jpg);
+  transition: 0.3s;
 }
 
 .container {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
+  max-width: 700px;
+  position: relative;
+  bottom: 250px;
+  margin: 0 auto;
   padding: 25px;
 }
 
@@ -48,10 +42,7 @@ body {
   width: 30px;
   height: 30px;
   cursor: pointer;
-}
-
-.header__icon-active {
-  background-image: url(./images/icon-moon.svg);
+  transition: 0.3s;
 }
 
 .type-todo {
@@ -64,6 +55,7 @@ body {
   gap: 15px;
   margin: 30px 0;
   padding: 15px;
+  transition: 0.3s;
 }
 
 .circle {
@@ -87,10 +79,8 @@ body {
 
 .todo-list {
   background-color: hsl(235, 24%, 19%);
-}
-
-.type-todo-active {
-  background-color: hsl(0, 0%, 98%);
+  transition: 0.3s;
+  box-shadow: 0px 29px 24px 3px rgba(0, 0, 0, 0.49);
 }
 
 .list-item {
@@ -106,6 +96,10 @@ body {
   position: relative;
 }
 
+.list-item:hover {
+  background-color: hsl(237, 18%, 23%);
+}
+
 .checkmark {
   width: 21px;
   height: 21px;
@@ -116,10 +110,7 @@ body {
   justify-content: center;
   align-items: center;
   cursor: pointer;
-}
-
-.checkmark-active {
-  background-image: linear-gradient(hsl(192, 100%, 67%), hsl(280, 87%, 65%));
+  order: 1;
 }
 
 .icon-check {
@@ -129,10 +120,6 @@ body {
   opacity: 0;
 }
 
-.icon-check-active {
-  opacity: 1;
-}
-
 .icon-x {
   background-image: url(./images/icon-cross.svg);
   background-size: cover;
@@ -140,6 +127,7 @@ body {
   height: 18px;
   color: hsl(0, 0%, 0%);
   opacity: 0;
+  order: 3;
   transition: 0.2s;
 }
 
@@ -152,10 +140,20 @@ input[type="checkbox"] {
   display: none;
 }
 
-input[type="checkbox"] + p {
+label {
   color: hsl(234, 11%, 63%);
   font-size: 18px;
   cursor: pointer;
+  order: 2;
+}
+
+.checkmark:hover,
+label:hover + .checkmark {
+  border: solid 1px;
+  border-left-color: hsl(192, 100%, 67%);
+  border-top-color: hsl(192, 100%, 67%);
+  border-bottom-color: hsl(280, 87%, 65%);
+  border-right-color: hsl(280, 87%, 65%);
 }
 
 .footer {
@@ -165,14 +163,12 @@ input[type="checkbox"] + p {
   padding: 15px;
   display: flex;
   align-items: center;
-  gap: 60px;
+  gap: 28px;
   justify-content: space-between;
   color: hsl(234, 11%, 52%);
   font-size: 14px;
-}
-
-.footer-active {
-  background-color: hsl(0, 0%, 98%);
+  transition: 0.3s;
+  box-shadow: 0px 29px 24px 3px rgba(0, 0, 0, 0.49);
 }
 
 .filters {
@@ -191,6 +187,101 @@ input[type="checkbox"] + p {
   color: hsl(230, 7%, 67%);
 }
 
-.filter-active {
+.filters-mobile {
+  width: 100%;
+  height: 55px;
+  background-color: hsl(235, 24%, 19%);
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 50px;
+  color: hsl(234, 11%, 52%);
+  font-size: 14px;
+  list-style: none;
+  margin-top: 25px;
+  display: none;
+  transition: 0.3s;
+  box-shadow: 0px 29px 24px 3px rgba(0, 0, 0, 0.49);
+}
+
+.filters-mobile li:hover {
+  cursor: pointer;
+  color: hsl(220, 95%, 75%);
+}
+
+main + p {
+  text-align: center;
+  color: hsl(234, 11%, 52%);
+  font-size: 14px;
+  position: relative;
+  bottom: 230px;
+}
+
+body.active {
+  background-color: hsl(236, 33%, 92%);
+}
+
+.background-img.active {
+  background-image: url(./images/bg-desktop-light.jpg);
+}
+
+.header__icon.active {
+  background-image: url(./images/icon-moon.svg);
+}
+
+.todo-list.active,
+.type-todo.active,
+.footer.active,
+.filters-mobile.active {
+  background-color: hsl(0, 0%, 98%);
+}
+
+.list-item.active .checkmark {
+  background-image: linear-gradient(hsl(192, 100%, 67%), hsl(280, 87%, 65%));
+}
+
+.list-item.active .icon-check {
+  opacity: 1;
+}
+
+.list-item.active label {
+  opacity: 0.6;
+  text-decoration: line-through;
+}
+
+li.active {
   color: hsl(220, 98%, 61%);
+}
+
+.todo-list.active .list-item:hover {
+  background-color: hsl(0, 0%, 95%);
+}
+
+/* Media */
+
+@media (max-width: 480px) {
+  .background-img {
+    background-image: url(./images/bg-mobile-dark.jpg);
+  }
+
+  .background-img.active {
+    background-image: url(./images/bg-mobile-light.jpg);
+  }
+
+  .filters {
+    display: none;
+  }
+
+  .filters-mobile {
+    display: flex;
+  }
+
+  #todo-input {
+    font-size: 16px;
+  }
+
+  label {
+    font-size: 15px;
+  }
 }

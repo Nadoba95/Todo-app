@@ -27,16 +27,7 @@
         <div class="circle"></div>
         <input type="text" id="todo-input" placeholder="Create a new todo..." />
       </div>
-      <div class="todo-list">
-        <!-- <div class="list-item">
-          <div class="checkmark">
-            <div class="icon-check"></div>
-          </div>
-          <input type="checkbox" />
-          <p>123</p>
-          <div class="icon-x"></div>
-        </div> -->
-      </div>
+      <div class="todo-list"></div>
       <div class="footer">
         <div class="counter">0 items left</div>
         <div class="filters">
@@ -46,7 +37,13 @@
         </div>
         <div class="clear" onclick="clearCompleted()">Clear Completed</div>
       </div>
+      <div class="filters-mobile">
+        <li onclick="showAll()">All</li>
+        <li onclick="filterActive()">Active</li>
+        <li onclick="filterCompleted()">Completed</li>
+      </div>
     </main>
+    <p>Drag and drop to reorder list</p>
     <script src="main.js"></script>
   </body>
 </html>
