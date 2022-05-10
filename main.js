@@ -33,17 +33,17 @@ function renderItems(items = []) {
 function addItem(e) {
   if (e.kay === "Enter" || e.keyCode === 13) {
     const item = {
-      text: e.target.value,
+      text: e.target.value.trim(),
       checked: false,
     };
 
-    if (e.target.value !== "") {
-      todos.push(item);
-      renderItems(todos);
-      localStorage.setItem("todos", JSON.stringify(todos));
-      countItems();
-      e.target.value = "";
-    }
+    if (item.text === "" || item.text.match(/<|>/g)) return;
+
+    todos.push(item);
+    renderItems(todos);
+    localStorage.setItem("todos", JSON.stringify(todos));
+    countItems();
+    e.target.value = "";
   }
 }
 
