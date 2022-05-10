@@ -43,6 +43,7 @@ function addItem(e) {
     }
     if (item.text.match(/<|>/g)) {
       alert("Can't contains < and > symbols, please enter valid input.");
+      e.target.value = "";
       return;
     }
 
