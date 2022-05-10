@@ -37,7 +37,14 @@ function addItem(e) {
       checked: false,
     };
 
-    if (item.text === "" || item.text.match(/<|>/g)) return;
+    if (item.text === "") {
+      alert("Can't be empty.");
+      return;
+    }
+    if (item.text.match(/<|>/g)) {
+      alert("Can't contains < and > symbols, please enter valid input.");
+      return;
+    }
 
     todos.push(item);
     renderItems(todos);
